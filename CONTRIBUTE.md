@@ -194,12 +194,15 @@ flutter run
 
 ### 1. Configurar PostgreSQL
 
-Crea una base de datos llamada `ecospot` y configura las credenciales en `backend/src/main/resources/application.properties`:
+Crea una base de datos llamada `ecospot` y añade tus credenciales  a tu variables de entorno o cambia las credenciales en `backend/src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/ecospot
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_contraseña
+spring.datasource.url=${DB_URL:jdbc:postgresql://localhost:5432/ecospot}
+spring.datasource.username=${DB_USER:tu_usuario}
+spring.datasource.password=${DB_PASSWORD:tu_contraseña}
+
+
+server.port=${PORT:8080}
 ```
 
 ### 2. Ejecutar el backend

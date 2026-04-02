@@ -6,7 +6,7 @@
     - frontend: Creates a Flutter development Environment with an android emulator
     - backend: Creates a Java Spring Development Environment
 
-    !!! Runables
+    !!! Runnables
     - backend: runs the backend projects.
     - start-db: Creates and initialize a PostgreSQL database that store the data in a folder called .pgdata
     - stop-db: Stop the PostgreSQL database
@@ -24,6 +24,10 @@
   }: let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
+
+    DB_URL = "jdbc:postgresql://localhost:5432/dev";
+    DB_USER = "dbuser";
+    DB_PASSWORD = "dbpass";
   in {
     # Environments
     devShells."${system}" = {
@@ -31,28 +35,26 @@
       backend = pkgs.mkShell {
         buildInputs = with pkgs; [
           openjdk25
+          maven3
         ];
 
+        DB_URL = "${DB_URL}";
+        DB_USER = "${DB_USER}";
+        DB_PASSWORD = "${DB_PASSWORD}";
+        PORT = 9090;
+        JWT_SECRET = 12345;
+        JWT_EXPIRATION = 864000;
+
         JAVA_HOME = "${pkgs.openjdk25.home}";
-        shellHook = ''
-          if [[ $(basename "$PWD") != "backend" ]]; then
-            echo "> You're not in the required folder 'backend/' "
-            exit
-          fi
-        '';
+
+        shellHook = '''';
       };
 
       # Frontend
       frontend = pkgs.mkShell {
         buildInputs = [];
         shellHook = ''
-          if [[ $(basename "$PWD") == "frontend" ]]; then
-            nix develop --refresh github:K1-mikaze/Nix-Environments/main?dir=flakes/language/dart
-            exit
-          else
-            echo "> You're not in the required folder 'frontend/' "
-            exit
-          fi
+          nix develop --refresh github:K1-mikaze/Nix-Environments/main?dir=flakes/language/dart
         '';
       };
     };
@@ -64,7 +66,11 @@
         program = let
           script = pkgs.writeShellScriptBin "start-backend" ''
             if [[ $(basename "$PWD") == "backend" ]]; then
+              export DB_URL="${DB_URL}";
+              export DB_USER="${DB_USER}";
+              export DB_PASSWORD="${DB_PASSWORD}";
               export JAVA_HOME="${pkgs.openjdk25.home}";
+              ./mvnw clean
               ./mvnw spring-boot:run
             else
               echo "> You're not in the required folder 'backend/' "

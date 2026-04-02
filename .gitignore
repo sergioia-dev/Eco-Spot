@@ -49,5 +49,7 @@ web/
 windows/
 
 ### Backend
+.pgdata/
 .env
 test.http
+DOCS.md
