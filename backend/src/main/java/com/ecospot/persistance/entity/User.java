@@ -35,10 +35,10 @@ public class User {
   private String password = "";
 
   @Column(name = "city", nullable = true, length = 80)
-  private String current_city = null;
+  private String currentCity = null;
 
   @Column(name = "country", nullable = true, length = 80)
-  private String current_country = null;
+  private String currentCountry = null;
 
   @Enumerated(EnumType.STRING)
   private Roles rol;
@@ -55,8 +55,8 @@ public class User {
     this.surname = surname;
     this.email = email;
     this.password = password;
-    this.current_city = current_city;
-    this.current_country = current_country;
+    this.currentCity = current_city;
+    this.currentCountry = current_country;
     this.rol = rol;
   }
 
@@ -108,20 +108,20 @@ public class User {
     this.password = password;
   }
 
-  public String getCurrent_city() {
-    return current_city;
+  public String getCurrentCity() {
+    return currentCity;
   }
 
-  public void setCurrent_city(String current_city) {
-    this.current_city = current_city;
+  public void setCurrentCity(String current_city) {
+    this.currentCity = current_city;
   }
 
-  public String getCurrent_country() {
-    return current_country;
+  public String getCurrentCountry() {
+    return currentCountry;
   }
 
-  public void setCurrent_country(String current_country) {
-    this.current_country = current_country;
+  public void setCurrentCountry(String current_country) {
+    this.currentCountry = current_country;
   }
 
   public Roles getRol() {
@@ -135,7 +135,7 @@ public class User {
   @Override
   public String toString() {
     return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", password=" + password
-        + ", current_city=" + current_city + ", current_country=" + current_country + ", rol=" + rol + "]";
+        + ", current_city=" + currentCity + ", current_country=" + currentCountry + ", rol=" + rol + "]";
   }
 
 }

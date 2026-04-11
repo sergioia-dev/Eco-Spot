@@ -12,7 +12,7 @@ import com.ecospot.presentation.dato.CreateUserRequest;
 import com.ecospot.presentation.dato.LoginRequest;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
   private final AuthService authService;

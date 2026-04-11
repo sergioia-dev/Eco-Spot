@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.ecospot.persistance.entity.Rental;
+import com.ecospot.persistance.entity.Experience;
 
 @Repository
-public interface RentalRepository extends JpaRepository<Rental, UUID> {
+public interface ExperienceRepository extends JpaRepository<Experience, UUID> {
 
-  List<Rental> findByCityAndCountry(String city, String country);
+  List<Experience> findByCityAndCountry(String city, String country);
 
 }

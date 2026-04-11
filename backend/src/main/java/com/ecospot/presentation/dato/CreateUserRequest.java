@@ -1,4 +1,4 @@
-package com.ecospot.presentation.DTO;
+package com.ecospot.presentation.dato;
 
 public class CreateUserRequest {
 
