@@ -29,6 +29,8 @@ public class AuthController {
         request.getSurname(),
         request.getEmail(),
         request.getPassword(),
+        request.getCity(),
+        request.getCountry(),
         request.getRol());
 
     if (created) {

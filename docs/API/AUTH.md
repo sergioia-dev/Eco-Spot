@@ -11,6 +11,8 @@ Crea un nuevo usuario en el sistema.
 {
   "name": "Nombre del usuario",
   "surname": "Apellido del usuario",
+  "city" : "MEDELLIN",
+  "country" : "COLOMBIA",
   "email": "correo@ejemplo.com",
   "password": "contraseña123",
   "rol": "TOURIST"

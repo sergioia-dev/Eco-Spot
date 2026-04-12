@@ -52,6 +52,8 @@ public class AuthControllerTest {
               "surname": "Doe",
               "email": "john@example.com",
               "password": "password123",
+              "city": "Madrid",
+              "country": "ESPAÑA",
               "rol": "TOURIST"
             }
             """))
@@ -60,7 +62,7 @@ public class AuthControllerTest {
 
   @Test
   void register_withDuplicateEmail_returnsConflict() throws Exception {
-    User existingUser = new User("John", "Doe", "john@example.com", passwordEncoder.encode("password123"), Roles.TOURIST);
+    User existingUser = new User("John", "Doe", "john@example.com", passwordEncoder.encode("password123"), "Madrid", "ESPAÑA", Roles.TOURIST);
     userRepository.save(existingUser);
 
     mockMvc.perform(post("/api/v1/auth/register")
@@ -71,6 +73,8 @@ public class AuthControllerTest {
               "surname": "Doe",
               "email": "john@example.com",
               "password": "password456",
+              "city": "Barcelona",
+              "country": "ESPAÑA",
               "rol": "TOURIST"
             }
             """))

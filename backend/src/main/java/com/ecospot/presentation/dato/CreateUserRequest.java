@@ -6,16 +6,21 @@ public class CreateUserRequest {
   private String surname;
   private String email;
   private String password;
+  private String city;
+  private String country;
   private String rol;
 
   public CreateUserRequest() {
   }
 
-  public CreateUserRequest(String name, String surname, String email, String password, String rol) {
+  public CreateUserRequest(String name, String surname, String email, String password, 
+                           String city, String country, String rol) {
     this.name = name;
     this.surname = surname;
     this.email = email;
     this.password = password;
+    this.city = city;
+    this.country = country;
     this.rol = rol;
   }
 
@@ -49,6 +54,22 @@ public class CreateUserRequest {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 
   public String getRol() {

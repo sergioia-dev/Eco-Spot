@@ -91,6 +91,32 @@ public class TouristService {
     return sortByUserCountry(results, userCountry);
   }
 
+  public boolean updateLocation(String token, String city, String country) {
+    if (!isValidTouristToken(token)) {
+      logger.warn("Invalid token provided for updateLocation");
+      return false;
+    }
+
+    Optional<User> userOpt = getUserFromToken(token);
+    if (userOpt.isEmpty()) {
+      logger.warn("User not found: {}", jwt.getUserId(token));
+      return false;
+    }
+
+    User user = userOpt.get();
+    user.setCurrentCity(city != null ? city.toUpperCase() : null);
+    user.setCurrentCountry(country != null ? country.toUpperCase() : null);
+
+    try {
+      userRepository.save(user);
+      logger.info("User location updated: {}", user.getId());
+      return true;
+    } catch (Exception e) {
+      logger.error("Error updating user location: {}", e.getMessage(), e);
+      return false;
+    }
+  }
+
   private Optional<User> getUserFromToken(String token) {
     UUID userId = jwt.getUserId(token);
     return userRepository.findById(userId);

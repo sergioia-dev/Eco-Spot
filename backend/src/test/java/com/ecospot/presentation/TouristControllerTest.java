@@ -1,6 +1,7 @@
 package com.ecospot.presentation;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -181,6 +182,101 @@ public class TouristControllerTest {
     mockMvc.perform(get("/api/v1/tourist/search")
         .header("Authorization", "Bearer " + validToken)
         .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateLocation_withValidToken_returnsOk() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer " + validToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "Barcelona",
+              "country": "ESPAÑA"
+            }
+            """))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void updateLocation_withoutAuthorization_returns400() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "Barcelona",
+              "country": "ESPAÑA"
+            }
+            """))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateLocation_withInvalidToken_returns401() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer invalid-token")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "Barcelona",
+              "country": "ESPAÑA"
+            }
+            """))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void updateLocation_withMissingCity_returns400() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer " + validToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "country": "ESPAÑA"
+            }
+            """))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateLocation_withMissingCountry_returns400() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer " + validToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "Barcelona"
+            }
+            """))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateLocation_withEmptyCity_returns400() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer " + validToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "",
+              "country": "ESPAÑA"
+            }
+            """))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void updateLocation_withEmptyCountry_returns400() throws Exception {
+    mockMvc.perform(patch("/api/v1/tourist/location")
+        .header("Authorization", "Bearer " + validToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("""
+            {
+              "city": "Barcelona",
+              "country": ""
+            }
+            """))
         .andExpect(status().isBadRequest());
   }
 }

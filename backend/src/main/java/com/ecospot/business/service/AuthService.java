@@ -27,13 +27,14 @@ public class AuthService {
     this.jwt = jwt;
   }
 
-  public boolean createUser(String name, String surname, String email, String password, String rol) {
+  public boolean createUser(String name, String surname, String email, String password, 
+                            String city, String country, String rol) {
     try {
       if (userRepository.existsByEmail(email)) {
         logger.warn("User with email {} already exists", email);
         return false;
       }
-      User user = new User(name, surname, email, passwordEncoder.encode(password), Roles.valueOf(rol));
+      User user = new User(name, surname, email, passwordEncoder.encode(password), city, country, Roles.valueOf(rol));
       userRepository.save(user);
       logger.info("User created successfully: {}", email);
       return true;
