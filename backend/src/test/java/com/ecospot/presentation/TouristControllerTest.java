@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.ecospot.business.dato.Roles;
 import com.ecospot.persistance.entity.User;
 import com.ecospot.persistance.repository.UserRepository;
+import com.ecospot.persistance.repository.RentalRepository;
 import com.ecospot.util.JWT;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,6 +34,9 @@ public class TouristControllerTest {
   private UserRepository userRepository;
 
   @Autowired
+  private RentalRepository rentalRepository;
+
+  @Autowired
   private JWT jwt;
 
   @Autowired
@@ -45,6 +49,7 @@ public class TouristControllerTest {
   @BeforeEach
   void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    rentalRepository.deleteAll();
     userRepository.deleteAll();
 
     testUser = new User("Test", "User", "test@example.com", passwordEncoder.encode("password123"), "Madrid", "ESPAÑA",

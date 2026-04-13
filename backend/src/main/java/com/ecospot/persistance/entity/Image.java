@@ -17,6 +17,9 @@ public class Image {
   @Column(name = "id", nullable = false, columnDefinition = "UUID DEFAULT gen_random_uuid()")
   private UUID id = UUID.randomUUID();
 
+  @Column(name = "extension", nullable = false, length = 10)
+  private String extension = "";
+
   @ManyToOne
   @JoinColumn(name = "rental_id", nullable = true)
   private Rental rental;
@@ -32,15 +35,21 @@ public class Image {
   public Image() {
   }
 
-  public Image(Rental rental) {
+  public Image(UUID id, String extension, Rental rental) {
+    this.id = id;
+    this.extension = extension;
     this.rental = rental;
   }
 
-  public Image(Business business) {
+  public Image(UUID id, String extension, Business business) {
+    this.id = id;
+    this.extension = extension;
     this.business = business;
   }
 
-  public Image(Experience experience) {
+  public Image(UUID id, String extension, Experience experience) {
+    this.id = id;
+    this.extension = extension;
     this.experience = experience;
   }
 
@@ -50,6 +59,14 @@ public class Image {
 
   public void setId(UUID id) {
     this.id = id;
+  }
+
+  public String getExtension() {
+    return extension;
+  }
+
+  public void setExtension(String extension) {
+    this.extension = extension;
   }
 
   public Rental getRental() {

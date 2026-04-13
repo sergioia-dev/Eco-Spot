@@ -16,6 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.ecospot.business.dato.Roles;
 import com.ecospot.persistance.entity.User;
 import com.ecospot.persistance.repository.UserRepository;
+import com.ecospot.persistance.repository.RentalRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
@@ -32,6 +33,9 @@ public class AuthControllerTest {
   private UserRepository userRepository;
 
   @Autowired
+  private RentalRepository rentalRepository;
+
+  @Autowired
   private PasswordEncoder passwordEncoder;
 
   private MockMvc mockMvc;
@@ -39,6 +43,7 @@ public class AuthControllerTest {
   @BeforeEach
   void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    rentalRepository.deleteAll();
     userRepository.deleteAll();
   }
 
