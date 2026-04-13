@@ -132,3 +132,36 @@ curl -X PUT "http://localhost:8080/api/v1/host/rentals/550e8400-e29b-41d4-a716-4
 - Solo el HOST que creó el rental o un usuario con rol ADMIN pueden actualizarlo
 - Las imágenes existentes serán eliminadas y reemplazadas por las nuevas
 - Todos los campos son requeridos (full update)
+
+## Eliminar Rental
+
+Elimina un rental existente. Solo el HOST que creó el rental o un ADMIN pueden eliminarlo.
+
+**URL:** `DELETE /api/v1/host/rentals/{rentalId}`
+
+**Encabezados:**
+| Campo | Valor |
+|-------|-------|
+| Authorization | Bearer {TOKEN_JWT} |
+
+**Parámetros de ruta:**
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| rentalId | UUID | ID del rental a eliminar |
+
+**Respuestas:**
+- **200 OK:** Rental eliminado exitosamente
+- **400 Bad Request:** Encabezado Authorization faltante
+- **401 Unauthorized:** Token inválido
+- **403 Forbidden:** Usuario no es el propietario, no es ADMIN, o rental no existe
+
+**Ejemplo de solicitud:**
+```bash
+curl -X DELETE "http://localhost:8080/api/v1/host/rentals/550e8400-e29b-41d4-a716-446655440000" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Notas:**
+- Solo el HOST que creó el rental o un usuario con rol ADMIN pueden eliminarlo
+- Todas las imágenes asociadas al rental también serán eliminadas (-archivos y registros en la base de datos)
+- Eliminar un rental que no existe retorna 403 Forbidden

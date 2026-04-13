@@ -1,5 +1,6 @@
 package com.ecospot.presentation;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -457,6 +458,64 @@ public class RentalControllerTest {
         .header("Authorization", "Bearer " + hostToken)
         .contentType(MediaType.MULTIPART_FORM_DATA))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void deleteRental_withValidHostTokenAndOwnership_returns200() throws Exception {
+    String rentalId = createRentalAndGetId(hostToken);
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId)
+        .header("Authorization", "Bearer " + hostToken))
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  void deleteRental_withoutAuthorization_returns400() throws Exception {
+    String rentalId = createRentalAndGetId(hostToken);
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void deleteRental_withInvalidToken_returns403() throws Exception {
+    String rentalId = createRentalAndGetId(hostToken);
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId)
+        .header("Authorization", "Bearer invalid-token"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void deleteRental_withTouristToken_returns403() throws Exception {
+    String rentalId = createRentalAndGetId(hostToken);
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId)
+        .header("Authorization", "Bearer " + touristToken))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void deleteRental_withHostTokenButNotOwner_returns403() throws Exception {
+    String rentalId = createRentalAndGetId(hostToken);
+
+    User otherHost = new User("Other", "Host", "other@example.com", passwordEncoder.encode("password123"),
+        "Madrid", "ESPAÑA", Roles.HOST);
+    otherHost = userRepository.save(otherHost);
+    String otherHostToken = jwt.generateToken(otherHost.getId(), "HOST");
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId)
+        .header("Authorization", "Bearer " + otherHostToken))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void deleteRental_withNonExistentRentalId_returns403() throws Exception {
+    String nonExistentId = UUID.randomUUID().toString();
+
+    mockMvc.perform(delete("/api/v1/host/rentals/" + nonExistentId)
+        .header("Authorization", "Bearer " + hostToken))
+        .andExpect(status().isForbidden());
   }
 
 }

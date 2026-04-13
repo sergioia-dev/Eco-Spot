@@ -2,6 +2,7 @@ package com.ecospot.presentation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,6 +89,21 @@ public class RentalController {
     boolean updated = rentalService.updateRental(token, rentalId, request);
 
     if (!updated) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/rentals/{rentalId}")
+  public ResponseEntity<Void> deleteRental(
+      @RequestHeader("Authorization") String authorizationHeader,
+      @PathVariable UUID rentalId) {
+
+    String token = authorizationHeader.replace("Bearer ", "");
+    boolean deleted = rentalService.deleteRental(token, rentalId);
+
+    if (!deleted) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 

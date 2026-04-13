@@ -229,4 +229,45 @@ public class RentalService {
     }
   }
 
+  public boolean deleteRental(String token, UUID rentalId) {
+    if (!isValidHostOrAdminToken(token)) {
+      logger.warn("Invalid token for deleteRental");
+      return false;
+    }
+
+    UUID userId = jwt.getUserId(token);
+    Optional<Rental> rentalOpt = rentalRepository.findById(rentalId);
+    if (rentalOpt.isEmpty()) {
+      logger.warn("Rental not found: {}", rentalId);
+      return false;
+    }
+
+    Rental rental = rentalOpt.get();
+    String userRole = jwt.getRol(token);
+
+    boolean isOwner = rental.getUser().getId().equals(userId);
+    boolean isAdmin = "ADMIN".equals(userRole);
+
+    if (!isOwner && !isAdmin) {
+      logger.warn("User {} is not authorized to delete rental {}", userId, rentalId);
+      return false;
+    }
+
+    try {
+      List<Image> existingImages = imageRepository.findByRentalId(rentalId);
+      for (Image img : existingImages) {
+        imageStorage.deleteImage(img.getId(), img.getExtension());
+        imageRepository.delete(img);
+      }
+
+      rentalRepository.delete(rental);
+      logger.info("Rental deleted successfully: {}", rentalId);
+      return true;
+
+    } catch (Exception e) {
+      logger.error("Error deleting rental: {}", e.getMessage(), e);
+      return false;
+    }
+  }
+
 }
