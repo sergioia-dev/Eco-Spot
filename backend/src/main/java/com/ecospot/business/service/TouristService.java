@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ecospot.persistance.entity.Business;
 import com.ecospot.persistance.entity.Experience;
 import com.ecospot.business.dato.ItemCategory;
+import com.ecospot.business.dato.ItemsResponse;
 import com.ecospot.persistance.entity.Rental;
 import com.ecospot.persistance.entity.User;
 import com.ecospot.persistance.repository.BusinessRepository;
@@ -47,9 +48,9 @@ public class TouristService {
     return "TOURIST".equals(jwt.getRol(token));
   }
 
-  public Object getItemsByCategory(String token, ItemCategory category) {
+  public ItemsResponse getItemsByLocation(String token) {
     if (!isValidTouristToken(token)) {
-      logger.warn("Invalid token provided for getItemsByCategory");
+      logger.warn("Invalid token provided for getItemsByLocation");
       return null;
     }
 
@@ -68,11 +69,16 @@ public class TouristService {
       country = country.toUpperCase();
     }
 
-    return switch (category) {
-      case RENTAL -> rentalRepository.findByCityAndCountry(city, country);
-      case BUSINESS -> businessRepository.findByCityAndCountry(city, country);
-      case EXPERIENCE -> experienceRepository.findByCityAndCountry(city, country);
-    };
+    List<Rental> rentals = rentalRepository.findByCityAndCountry(city, country);
+    List<Business> businesses = businessRepository.findByCityAndCountry(city, country);
+    List<Experience> experiences = experienceRepository.findByCityAndCountry(city, country);
+
+    int limit = 10;
+    rentals = rentals.size() > limit ? rentals.subList(0, limit) : rentals;
+    businesses = businesses.size() > limit ? businesses.subList(0, limit) : businesses;
+    experiences = experiences.size() > limit ? experiences.subList(0, limit) : experiences;
+
+    return new ItemsResponse(experiences, rentals, businesses);
   }
 
   public List<Object> search(String token, ItemCategory category, String searchBy) {
@@ -89,32 +95,6 @@ public class TouristService {
     }
 
     return sortByUserCountry(results, userCountry);
-  }
-
-  public boolean updateLocation(String token, String city, String country) {
-    if (!isValidTouristToken(token)) {
-      logger.warn("Invalid token provided for updateLocation");
-      return false;
-    }
-
-    Optional<User> userOpt = getUserFromToken(token);
-    if (userOpt.isEmpty()) {
-      logger.warn("User not found: {}", jwt.getUserId(token));
-      return false;
-    }
-
-    User user = userOpt.get();
-    user.setCurrentCity(city != null ? city.toUpperCase() : null);
-    user.setCurrentCountry(country != null ? country.toUpperCase() : null);
-
-    try {
-      userRepository.save(user);
-      logger.info("User location updated: {}", user.getId());
-      return true;
-    } catch (Exception e) {
-      logger.error("Error updating user location: {}", e.getMessage(), e);
-      return false;
-    }
   }
 
   private Optional<User> getUserFromToken(String token) {

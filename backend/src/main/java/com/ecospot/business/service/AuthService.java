@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ecospot.persistance.dato.Roles;
+import com.ecospot.business.dato.Roles;
 import com.ecospot.persistance.entity.User;
 import com.ecospot.persistance.repository.UserRepository;
 import com.ecospot.util.JWT;
@@ -27,8 +27,8 @@ public class AuthService {
     this.jwt = jwt;
   }
 
-  public boolean createUser(String name, String surname, String email, String password, 
-                            String city, String country, String rol) {
+  public boolean createUser(String name, String surname, String email, String password,
+      String city, String country, String rol) {
     try {
       if (userRepository.existsByEmail(email)) {
         logger.warn("User with email {} already exists", email);
