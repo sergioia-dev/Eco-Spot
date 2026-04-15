@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.AfterEach;
@@ -534,11 +535,11 @@ public class RentalControllerTest {
     String rentalId = createRentalAndGetId(hostToken);
     Rental rental = rentalRepository.findById(UUID.fromString(rentalId)).get();
 
-    Reservation reservation = new Reservation(
+Reservation reservation = new Reservation(
         hostUser,
         rental,
-        LocalDateTime.now().plusDays(1),
-        LocalDateTime.now().plusDays(3));
+        LocalDate.now().plusDays(1),
+        LocalDate.now().plusDays(3));
     reservationRepository.save(reservation);
 
     mockMvc.perform(delete("/api/v1/host/rentals/" + rentalId)
@@ -716,8 +717,8 @@ public class RentalControllerTest {
     Reservation reservation = new Reservation(
         touristUser,
         rental,
-        LocalDateTime.now().plusDays(1),
-        LocalDateTime.now().plusDays(3));
+        LocalDate.now().plusDays(1),
+        LocalDate.now().plusDays(3));
     reservationRepository.save(reservation);
 
     return reservation.getId().toString();

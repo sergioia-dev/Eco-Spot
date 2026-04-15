@@ -29,6 +29,10 @@ public class Payment {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @ManyToOne
+  @JoinColumn(name = "reservation_id", nullable = true)
+  private Reservation reservation;
+
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false, length = 20)
   private PaymentStatus status = PaymentStatus.PROGRESS;
@@ -67,6 +71,14 @@ public class Payment {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Reservation getReservation() {
+    return reservation;
+  }
+
+  public void setReservation(Reservation reservation) {
+    this.reservation = reservation;
   }
 
   public PaymentStatus getStatus() {

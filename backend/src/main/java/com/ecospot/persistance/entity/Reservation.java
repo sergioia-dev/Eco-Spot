@@ -1,5 +1,6 @@
 package com.ecospot.persistance.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -30,10 +31,10 @@ public class Reservation {
   private Rental rental;
 
   @Column(name = "starting_date", nullable = false)
-  private LocalDateTime startingDate;
+  private LocalDate startingDate;
 
   @Column(name = "end_date", nullable = false)
-  private LocalDateTime endDate;
+  private LocalDate endDate;
 
   @Column(name = "is_cancelled", nullable = false)
   private boolean isCancelled = false;
@@ -41,7 +42,7 @@ public class Reservation {
   public Reservation() {
   }
 
-  public Reservation(User user, Rental rental, LocalDateTime startingDate, LocalDateTime endDate) {
+  public Reservation(User user, Rental rental, LocalDate startingDate, LocalDate endDate) {
     this.user = user;
     this.rental = rental;
     this.startingDate = startingDate;
@@ -80,19 +81,19 @@ public class Reservation {
     this.rental = rental;
   }
 
-  public LocalDateTime getStartingDate() {
+  public LocalDate getStartingDate() {
     return startingDate;
   }
 
-  public void setStartingDate(LocalDateTime startingDate) {
+  public void setStartingDate(LocalDate startingDate) {
     this.startingDate = startingDate;
   }
 
-  public LocalDateTime getEndDate() {
+  public LocalDate getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(LocalDateTime endDate) {
+  public void setEndDate(LocalDate endDate) {
     this.endDate = endDate;
   }
 

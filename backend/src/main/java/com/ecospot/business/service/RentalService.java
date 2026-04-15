@@ -15,6 +15,7 @@ import com.ecospot.business.dato.RentalResponse;
 import com.ecospot.business.dato.RentalResponse.ImageInfo;
 import com.ecospot.business.dato.ReservationResponse;
 import com.ecospot.business.dato.UpdateRentalRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.ecospot.persistance.entity.Image;
@@ -328,7 +329,7 @@ public class RentalService {
     }
 
     List<Reservation> futureReservations = reservationRepository.findByRentalIdAndStartingDateAfterAndIsCancelledFalse(
-        rentalId, LocalDateTime.now());
+        rentalId, LocalDate.now());
     if (!futureReservations.isEmpty()) {
       logger.warn("Cannot delete rental {} - has {} future reservation(s)", rentalId, futureReservations.size());
       return false;
@@ -414,7 +415,7 @@ public class RentalService {
     }
 
     List<Reservation> futureReservations = reservationRepository.findByRentalIdAndStartingDateAfterAndIsCancelledFalse(
-        rentalId, LocalDateTime.now());
+        rentalId, LocalDate.now());
     return !futureReservations.isEmpty();
   }
 
@@ -445,10 +446,10 @@ public class RentalService {
     List<Reservation> reservations;
     if (upcoming) {
       reservations = reservationRepository.findByRentalIdAndStartingDateAfterAndIsCancelledFalse(
-          rentalId, LocalDateTime.now());
+          rentalId, LocalDate.now());
     } else {
       reservations = reservationRepository.findByRentalIdAndStartingDateBeforeAndIsCancelledFalse(
-          rentalId, LocalDateTime.now());
+          rentalId, LocalDate.now());
     }
 
     return reservations.stream()

@@ -1,5 +1,46 @@
 # Documentación del Turista
 
+## Crear Reserva
+
+Crea una nueva reservación para un rental.
+
+**URL:** `POST /api/v1/tourist/rentals/{rentalId}/reservations`
+
+**Encabezados:**
+| Campo | Valor |
+|-------|-------|
+| Authorization | Bearer {TOKEN_JWT} |
+
+**Parámetros de ruta:**
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| rentalId | UUID | ID del rental |
+
+**Cuerpo de la solicitud:**
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| startingDate | Date | Fecha de inicio (YYYY-MM-DD) |
+| endDate | Date | Fecha de fin (YYYY-MM-DD) |
+
+**Respuestas:**
+- **201 Created:** Reservación creada
+- **400 Bad Request:** Authorization faltante o fechas inválidas
+- **403 Forbidden:** Fechas superpuestas con otra reservación o rental no disponible
+
+**Ejemplo de solicitud:**
+```bash
+curl -X POST "http://localhost:8080/api/v1/tourist/rentals/550e8400-e29b-41d4-a716-446655440000/reservations" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{"startingDate": "2026-05-01", "endDate": "2026-05-05"}'
+```
+
+**Notas:**
+- Las reservaciones son por días (no por horas)
+- Las fechas deben ser futuras
+- No se pueden crear reservaciones con fechas que superen otras reservaciones existentes
+- El host del rental puede cancelar la reservación posteriormente
+
 ## Cancelar Reserva
 
 Cancela una reservación existente. Solo el turistas que hizo la reservación puede cancelarla.

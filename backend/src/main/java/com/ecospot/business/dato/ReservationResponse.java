@@ -1,6 +1,6 @@
 package com.ecospot.business.dato;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class ReservationResponse {
@@ -10,15 +10,15 @@ public class ReservationResponse {
   private String rentalName;
   private String userName;
   private String userSurname;
-  private LocalDateTime startingDate;
-  private LocalDateTime endDate;
+  private LocalDate startingDate;
+  private LocalDate endDate;
   private boolean isCancelled;
 
   public ReservationResponse() {
   }
 
   public ReservationResponse(UUID id, UUID rentalId, String rentalName, String userName,
-      String userSurname, LocalDateTime startingDate, LocalDateTime endDate, boolean isCancelled) {
+      String userSurname, LocalDate startingDate, LocalDate endDate, boolean isCancelled) {
     this.id = id;
     this.rentalId = rentalId;
     this.rentalName = rentalName;
@@ -69,19 +69,19 @@ public class ReservationResponse {
     this.userSurname = userSurname;
   }
 
-  public LocalDateTime getStartingDate() {
+  public LocalDate getStartingDate() {
     return startingDate;
   }
 
-  public void setStartingDate(LocalDateTime startingDate) {
+  public void setStartingDate(LocalDate startingDate) {
     this.startingDate = startingDate;
   }
 
-  public LocalDateTime getEndDate() {
+  public LocalDate getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(LocalDateTime endDate) {
+  public void setEndDate(LocalDate endDate) {
     this.endDate = endDate;
   }
 

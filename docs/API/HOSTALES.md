@@ -315,8 +315,8 @@ curl -X GET "http://localhost:8080/api/v1/host/rentals/550e8400-e29b-41d4-a716-4
   "rentalName": "Beach House",
   "userName": "John",
   "userSurname": "Doe",
-  "startingDate": "2026-05-01T10:00:00",
-  "endDate": "2026-05-05T12:00:00",
+  "startingDate": "2026-05-01",
+  "endDate": "2026-05-05",
   "isCancelled": false
 }]
 ```
