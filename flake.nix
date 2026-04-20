@@ -39,8 +39,7 @@
         DB_URL = "${DB_URL}";
         DB_USER = "${DB_USER}";
         DB_PASSWORD = "${DB_PASSWORD}";
-        PORT = 9090;
-        JWT_SECRET = 12345;
+        JWT_SECRET = "EcoSpot2026SecretKeyForJWTTokenGen12345678901234567890123456789012345678901234567890";
         JWT_EXPIRATION = 864000;
 
         JAVA_HOME = "${pkgs.openjdk25.home}";

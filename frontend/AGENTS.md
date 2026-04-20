@@ -21,6 +21,9 @@ This sets up Flutter SDK and all required dependencies. All commands below shoul
 
 Alternatively, you can use the Flutter SDK if installed globally on your system.
 
+All Flutter commands below assume you're in the Nix development shell. If you receive
+"command not found" errors, run `nix-shell -p flutter` first to enter the shell.
+
 ## Project Structure
 
 ```

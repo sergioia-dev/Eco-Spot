@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:frontend/domain/repository_interfaces/auth_interface.dart';
 import 'package:frontend/presentation/routes/routes.dart';
+import 'package:frontend/domain/providers/secure_storage_provider.dart';
+import 'package:frontend/util/validators/jwt.dart';
 import 'package:frontend/util/validators/validators.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -32,7 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
         _isLoading = true;
       });
 
-      final success = await widget.authInterface.signIn(
+      final token = await widget.authInterface.signIn(
         _emailController.text,
         _passwordController.text,
       );
@@ -41,20 +44,51 @@ class _SignInScreenState extends State<SignInScreen> {
         _isLoading = false;
       });
 
-      if (success) {
+      if (token != null && mounted) {
+        final secureStorage = context.read<SecureStorageProvider>();
+        await secureStorage.write('token', token);
         if (mounted) {
-          Navigator.pushReplacementNamed(context, Routes.homeScreen);
+          final role = getRolFromToken(token);
+          _navigateByRole(role);
         }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid email or password'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid email or password'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
+    }
+  }
+
+  void _navigateByRole(String? role) {
+    if (role == null) {
+      Navigator.pushReplacementNamed(context, Routes.signInScreen);
+      return;
+    }
+
+    switch (role) {
+      case 'TOURIST':
+        // TODO: Navigate to Tourist home screen
+        Navigator.pushReplacementNamed(context, Routes.touristHomeScreen);
+        break;
+      case 'HOST':
+        // TODO: Navigate to Host dashboard
+        Navigator.pushReplacementNamed(context, Routes.hostHomeScreen);
+        break;
+      case 'BUSINESS':
+        // TODO: Navigate to Business panel
+        Navigator.pushReplacementNamed(context, Routes.businessHomeScreen);
+        break;
+      case 'EXPERIENCE':
+        // TODO: Navigate to Experience panel
+        Navigator.pushReplacementNamed(context, Routes.adminHomeScreen);
+        break;
+      case 'ADMINISTRATOR':
+        // TODO: Navigate to Experience panel
+        Navigator.pushReplacementNamed(context, Routes.adminHomeScreen);
+        break;
     }
   }
 

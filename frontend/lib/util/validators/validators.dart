@@ -18,3 +18,28 @@ String? validatePassword(String? value) {
   }
   return null;
 }
+
+String? validateName(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Name is required';
+  }
+  return null;
+}
+
+String? validateSurname(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Surname is required';
+  }
+  return null;
+}
+
+String? validateRole(String? value) {
+  const validRoles = ['TOURIST', 'HOST', 'BUSINESS', 'EXPERIENCE'];
+  if (value == null || value.isEmpty) {
+    return 'Role is required';
+  }
+  if (!validRoles.contains(value)) {
+    return 'Invalid role';
+  }
+  return null;
+}
