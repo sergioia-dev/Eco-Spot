@@ -14,8 +14,10 @@ class Rental {
   final String? location;
   final double valueNight;
   final bool isEnable;
-  final double reviewAverage;
+  final double? reviewAverage;
   final List<RentalImage> images;
+  final DateTime? createdAt;
+  final List<dynamic>? reviews;
 
   Rental({
     required this.id,
@@ -31,30 +33,37 @@ class Rental {
     this.location,
     required this.valueNight,
     required this.isEnable,
-    required this.reviewAverage,
+    this.reviewAverage,
     required this.images,
+    this.createdAt,
+    this.reviews,
   });
 
   factory Rental.fromJson(Map<String, dynamic> json) {
     return Rental(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: (json['id'] as String?) ?? '',
+      name: (json['name'] as String?) ?? '',
       description: json['description'] as String?,
-      contact: json['contact'] as String,
-      size: json['size'] as int,
-      peopleQuantity: json['peopleQuantity'] as int,
-      rooms: json['rooms'] as int,
-      bathrooms: json['bathrooms'] as int,
-      city: json['city'] as String,
-      country: json['country'] as String,
+      contact: (json['contact'] as String?) ?? '',
+      size: (json['size'] as int?) ?? 0,
+      peopleQuantity: (json['peopleQuantity'] as int?) ?? 0,
+      rooms: (json['rooms'] as int?) ?? 0,
+      bathrooms: (json['bathrooms'] as int?) ?? 0,
+      city: (json['city'] as String?) ?? '',
+      country: (json['country'] as String?) ?? '',
       location: json['location'] as String?,
-      valueNight: (json['valueNight'] as num).toDouble(),
+      valueNight: (json['valueNight'] as num?)?.toDouble() ?? 0.0,
       isEnable: json['enable'] as bool? ?? true,
-      reviewAverage: (json['reviewAverage'] as num).toDouble(),
-      images: (json['images'] as List<dynamic>?)
+      reviewAverage: (json['reviewAverage'] as num?)?.toDouble(),
+      images:
+          (json['images'] as List<dynamic>?)
               ?.map((e) => RentalImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'] as String)
+          : null,
+      reviews: (json['reviews'] as List<dynamic>?),
     );
   }
 
@@ -75,6 +84,8 @@ class Rental {
       'isEnable': isEnable,
       'reviewAverage': reviewAverage,
       'images': images.map((e) => e.toJson()).toList(),
+      'createdAt': createdAt?.toIso8601String(),
+      'reviews': reviews,
     };
   }
 }

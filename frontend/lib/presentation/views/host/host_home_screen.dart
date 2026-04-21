@@ -413,13 +413,13 @@ class _RentalCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (rental.reviewAverage > 0)
+                    if ((rental.reviewAverage ?? 0) > 0)
                       Row(
                         children: [
                           const Icon(Icons.star, size: 16, color: Colors.amber),
                           const SizedBox(width: 4),
                           Text(
-                            rental.reviewAverage.toStringAsFixed(1),
+                            (rental.reviewAverage ?? 0).toStringAsFixed(1),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],

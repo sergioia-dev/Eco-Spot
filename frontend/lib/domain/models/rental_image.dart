@@ -11,8 +11,8 @@ class RentalImage {
 
   factory RentalImage.fromJson(Map<String, dynamic> json) {
     return RentalImage(
-      id: json['id'] as String,
-      extension: json['extension'] as String,
+      id: (json['id'] as String?) ?? '',
+      extension: (json['extension'] as String?) ?? 'jpg',
     );
   }
 

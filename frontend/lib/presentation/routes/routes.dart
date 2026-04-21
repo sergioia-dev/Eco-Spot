@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository_implementations/auth_repository.dart';
 import 'package:frontend/presentation/views/host/host_bundle.dart';
+import 'package:frontend/presentation/views/tourist/tourist_bundle.dart';
 import 'package:frontend/presentation/views/host/reservations_screen.dart';
 import 'package:frontend/presentation/views/auth/auth_bundle.dart';
 import 'package:frontend/presentation/views/splash_screen.dart';
@@ -19,24 +20,26 @@ class Routes {
   static const String createRentalScreen = 'create_rental';
   static const String reservationsScreen = 'reservations';
 
-static Map<String, Widget Function(BuildContext)> routes = {
+  static Map<String, Widget Function(BuildContext)> routes = {
     splashScreen: (context) => const SplashScreen(),
     signInScreen: (context) => SignInScreen(authInterface: AuthRepository()),
     signUpScreen: (context) => SignUpScreen(authInterface: AuthRepository()),
     homeScreen: (context) =>
         const Scaffold(body: Center(child: Text('Home Screen'))),
-    touristHomeScreen: (context) =>
-        const Scaffold(body: Center(child: Text('Tourist Home Screen'))),
+    touristHomeScreen: (context) => TouristHomeScreen(),
     hostHomeScreen: (context) => const HostHomeScreen(),
     createRentalScreen: (context) => const RentalFormScreen(),
-reservationsScreen: (context) {
-      final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    reservationsScreen: (context) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, String>;
       return ReservationsScreen(
         rentalId: args['rentalId']!,
         rentalName: args['rentalName']!,
       );
     },
-    businessHomeScreen: (context) => const Scaffold(body: Center(child: Text('Business Home Screen'))),
-    adminHomeScreen: (context) => const Scaffold(body: Center(child: Text('Admin Home Screen'))),
+    businessHomeScreen: (context) =>
+        const Scaffold(body: Center(child: Text('Business Home Screen'))),
+    adminHomeScreen: (context) =>
+        const Scaffold(body: Center(child: Text('Admin Home Screen'))),
   };
 }

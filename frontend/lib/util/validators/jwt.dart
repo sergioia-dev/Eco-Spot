@@ -19,4 +19,3 @@ String? getRolFromToken(String token) {
   final payload = decodeJwt(token);
   return payload['rol'] as String?;
 }
-
