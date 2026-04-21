@@ -15,6 +15,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "experiences")
 public class Experience {
@@ -26,6 +28,7 @@ public class Experience {
   @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime createdAt;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;

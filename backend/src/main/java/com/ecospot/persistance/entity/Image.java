@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "images")
 public class Image {
@@ -20,14 +22,17 @@ public class Image {
   @Column(name = "extension", nullable = false, length = 10)
   private String extension = "";
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "rental_id", nullable = true)
   private Rental rental;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "business_id", nullable = true)
   private Business business;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "experience_id", nullable = true)
   private Experience experience;
