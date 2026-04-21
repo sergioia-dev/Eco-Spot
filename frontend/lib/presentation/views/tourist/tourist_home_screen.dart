@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:frontend/domain/models/rental.dart';
 import 'package:frontend/domain/providers/tourist_provider.dart';
 import 'package:frontend/domain/providers/secure_storage_provider.dart';
+import 'package:frontend/presentation/widgets/tourist_sidebar.dart';
+import 'package:frontend/presentation/widgets/tourist_bottom_nav.dart';
 
 class TouristHomeScreen extends StatefulWidget {
   const TouristHomeScreen({super.key});
@@ -14,6 +16,7 @@ class TouristHomeScreen extends StatefulWidget {
 class _TouristHomeScreenState extends State<TouristHomeScreen> {
   late TouristProvider _touristProvider;
   int _selectedCategory = 0;
+  int _currentNavIndex = 0;
 
   @override
   void initState() {
@@ -58,7 +61,7 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
           actions: [Icon(Icons.notifications)],
         ),
 
-        drawer: _buildSidebar(),
+        drawer: const TouristSidebar(),
         body: Consumer<TouristProvider>(
           builder: (context, touristProvider, child) {
             return Column(
@@ -69,62 +72,17 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
             );
           },
         ),
-        bottomNavigationBar: _buildBottomNav(),
-      ),
-    );
-  }
-
-  Widget _buildSidebar() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFFFF385C)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.account_circle, size: 48, color: Colors.white),
-                SizedBox(height: 8),
-                Text(
-                  'Eco Spot',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              // TODO: Navigate to settings
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('Help'),
-            onTap: () {
-              // TODO: Navigate to help
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Logout', style: TextStyle(color: Colors.red)),
-            onTap: () async {
-              final secureStorage = context.read<SecureStorageProvider>();
-              await secureStorage.deleteAll();
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, 'signin');
-              }
-            },
-          ),
-        ],
+        bottomNavigationBar: TouristBottomNav(
+          currentIndex: _currentNavIndex,
+          onTap: (index) {
+            setState(() {
+              _currentNavIndex = index;
+            });
+            if (index == 1) {
+              Navigator.pushNamed(context, 'tourist_search');
+            }
+          },
+        ),
       ),
     );
   }
@@ -362,36 +320,6 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: const Color(0xFFFF385C),
-      unselectedItemColor: Colors.grey,
-      currentIndex: 0,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            break;
-          case 1:
-            break;
-          case 2:
-            break;
-          case 3:
-            break;
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_today),
-          label: 'Reservations',
-        ),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-      ],
     );
   }
 }

@@ -11,4 +11,3 @@ abstract class AuthInterface {
     required String rol,
   });
 }
-
