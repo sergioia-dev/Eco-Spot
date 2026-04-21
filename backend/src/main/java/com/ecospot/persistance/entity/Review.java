@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "reviews")
 public class Review {
@@ -21,14 +23,17 @@ public class Review {
   @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime createdAt;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "rental_id", nullable = true)
   private Rental rental;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "business_id", nullable = true)
   private Business business;
