@@ -102,8 +102,16 @@ class TouristRepository implements TouristInterface {
     if (response.statusCode == 400) {
       throw Exception('Bad Request: Token no proporcionado');
     }
-    if (response.statusCode == 201 && response.body.isNotEmpty) {
-      return Review.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    if (response.statusCode == 403) {
+      throw Exception('Forbidden: Usuario ya reseñó este rental');
+    }
+    if (response.statusCode == 201) {
+      return Review(
+        id: '',
+        qualification: qualification,
+        opinion: opinion,
+        creationDate: DateTime.now(),
+      );
     }
     return null;
   }

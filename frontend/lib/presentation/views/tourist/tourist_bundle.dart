@@ -5,3 +5,4 @@ export 'package:frontend/presentation/views/tourist/tourist_profile_screen.dart'
 export 'package:frontend/presentation/views/tourist/tourist_rental_detail_screen.dart';
 export 'package:frontend/presentation/views/tourist/tourist_create_reservation_screen.dart';
 export 'package:frontend/presentation/views/tourist/tourist_payment_screen.dart';
+export 'package:frontend/presentation/views/tourist/tourist_create_review_screen.dart';

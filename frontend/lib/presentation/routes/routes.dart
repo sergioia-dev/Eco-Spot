@@ -26,6 +26,7 @@ class Routes {
   static const String touristRentalDetailScreen = 'tourist_rental_detail';
   static const String touristReservationFormScreen = 'tourist_reservation_form';
   static const String touristPaymentScreen = 'tourist_payment';
+  static const String touristReviewScreen = 'tourist_review';
 
   static Map<String, Widget Function(BuildContext)> routes = {
     splashScreen: (context) => const SplashScreen(),
@@ -61,6 +62,14 @@ class Routes {
         endDate: args['endDate'] as String,
         totalPrice: args['totalPrice'] as double,
         nights: args['nights'] as int,
+      );
+    },
+    touristReviewScreen: (context) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      return TouristCreateReviewScreen(
+        rentalId: args['rentalId'] as String,
+        rentalName: args['rentalName'] as String,
       );
     },
     hostHomeScreen: (context) => const HostHomeScreen(),
