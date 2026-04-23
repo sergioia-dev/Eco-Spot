@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:frontend/data/repository_implementations/tourist_repository.dart';
+import 'package:frontend/data/repository_implementations/host_repository.dart';
 import 'package:frontend/domain/models/reservation_created.dart';
 import 'package:frontend/domain/models/payment.dart';
 import 'package:frontend/domain/models/review.dart';
@@ -7,6 +8,7 @@ import 'package:frontend/domain/models/tourist_item.dart';
 
 class TouristProvider extends ChangeNotifier {
   final TouristRepository _touristRepository = TouristRepository();
+  final HostRepository _hostRepository = HostRepository();
 
   TouristItem? _touristItem;
   SearchResult? _searchResults;
@@ -183,6 +185,30 @@ class TouristProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> cancelReservationHost({
+    required String token,
+    required String reservationId,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final result = await _hostRepository.cancelReservation(
+        token: token,
+        reservationId: reservationId,
+      );
+      _isLoading = false;
+      notifyListeners();
+      return result;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;

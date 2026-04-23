@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:frontend/domain/models/rental.dart';
 import 'package:frontend/domain/providers/tourist_provider.dart';
 import 'package:frontend/domain/providers/secure_storage_provider.dart';
+import 'package:frontend/presentation/routes/routes.dart';
 import 'package:frontend/presentation/widgets/tourist_sidebar.dart';
 import 'package:frontend/presentation/widgets/tourist_bottom_nav.dart';
 
@@ -32,6 +33,27 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
     final token = await secureStorage.read('token');
     if (token != null) {
       await _touristProvider.loadItemsByLocation(token);
+      if (_touristProvider.error != null &&
+          _isAuthError(_touristProvider.error!)) {
+        await _logout();
+      }
+    }
+  }
+
+  bool _isAuthError(String error) {
+    final lower = error.toLowerCase();
+    return lower.contains('401') ||
+        lower.contains('unauthorized') ||
+        lower.contains('token') ||
+        lower.contains('invalid') ||
+        lower.contains('expired');
+  }
+
+  Future<void> _logout() async {
+    final secureStorage = context.read<SecureStorageProvider>();
+    await secureStorage.deleteAll();
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, Routes.signInScreen);
     }
   }
 
@@ -79,11 +101,11 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
               _currentNavIndex = index;
             });
             if (index == 1) {
-              Navigator.pushNamed(context, 'tourist_search');
+              Navigator.pushNamed(context, Routes.touristSearchScreen);
             } else if (index == 2) {
-              Navigator.pushNamed(context, 'tourist_reservations');
+              Navigator.pushNamed(context, Routes.touristReservationsScreen);
             } else if (index == 3) {
-              Navigator.pushNamed(context, 'tourist_profile');
+              Navigator.pushNamed(context, Routes.touristProfileScreen);
             }
           },
         ),
@@ -248,81 +270,96 @@ class _TouristHomeScreenState extends State<TouristHomeScreen> {
           : null;
     }
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (imageUrl != null)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: Image.network(
-                imageUrl,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 150,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.image, size: 48),
-                  );
-                },
-              ),
-            )
-          else
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: Container(
-                height: 150,
-                width: double.infinity,
-                color: Colors.grey[300],
-                child: const Icon(Icons.image, size: 48),
-              ),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+    return GestureDetector(
+      onTap: () {
+        if (isRental && item is Rental) {
+          Navigator.pushNamed(
+            context,
+            Routes.touristRentalDetailScreen,
+            arguments: item,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Feature coming soon')),
+          );
+        }
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (imageUrl != null)
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$city, $country',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
+                child: Image.network(
+                  imageUrl,
+                  height: 150,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: 150,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image, size: 48),
+                    );
+                  },
                 ),
-                if (valueNight > 0) ...[
-                  const SizedBox(height: 8),
+              )
+            else
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.image, size: 48),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    '\$${valueNight.toStringAsFixed(0)}/night',
+                    name,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFFF385C),
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$city, $country',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  if (valueNight > 0) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '\$${valueNight.toStringAsFixed(0)}/night',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFFF385C),
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

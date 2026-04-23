@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 Map<String, dynamic> decodeJwt(String token) {
+  print(token);
   final parts = token.split('.');
   if (parts.length != 3) {
     throw const FormatException('Invalid JWT token');

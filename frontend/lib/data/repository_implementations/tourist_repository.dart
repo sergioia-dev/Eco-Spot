@@ -30,6 +30,12 @@ class TouristRepository implements TouristInterface {
       body: jsonEncode({'startingDate': startingDate, 'endDate': endDate}),
     );
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
     if (response.statusCode == 201 && response.body.isNotEmpty) {
       return ReservationCreated.fromJson(
         jsonDecode(response.body) as Map<String, dynamic>,
@@ -52,9 +58,21 @@ class TouristRepository implements TouristInterface {
       body: jsonEncode({'reservationId': reservationId, 'amount': amount}),
     );
 
-    if (response.statusCode == 201 && response.body.isNotEmpty) {
-      return Payment.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>,
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
+    if (response.statusCode == 403) {
+      throw Exception('Forbidden: Usuario no autorizado o monto inválido');
+    }
+    if (response.statusCode == 201) {
+      return Payment(
+        id: '',
+        reservationId: reservationId,
+        amount: amount,
+        status: 'SUCCESS',
       );
     }
     return null;
@@ -78,6 +96,12 @@ class TouristRepository implements TouristInterface {
       }),
     );
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
     if (response.statusCode == 201 && response.body.isNotEmpty) {
       return Review.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
     }
@@ -93,6 +117,13 @@ class TouristRepository implements TouristInterface {
 
     final response = await _client.patch(uri, headers: _headers(token));
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
+
     return response.statusCode == 200;
   }
 
@@ -102,6 +133,12 @@ class TouristRepository implements TouristInterface {
 
     final response = await _client.get(uri, headers: _headers(token));
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
     if (response.statusCode == 200 && response.body.isNotEmpty) {
       return TouristItem.fromJson(
         jsonDecode(response.body) as Map<String, dynamic>,
@@ -125,6 +162,12 @@ class TouristRepository implements TouristInterface {
 
     final response = await _client.get(uri, headers: _headers(token));
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
     if (response.statusCode == 200 && response.body.isNotEmpty) {
       return SearchResult.fromJson(jsonDecode(response.body));
     }
@@ -142,6 +185,12 @@ class TouristRepository implements TouristInterface {
 
     final response = await _client.get(uri, headers: _headers(token));
 
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized: Token inválido o usuario no encontrado');
+    }
+    if (response.statusCode == 400) {
+      throw Exception('Bad Request: Token no proporcionado');
+    }
     if (response.statusCode == 200 && response.body.isNotEmpty) {
       final List<dynamic> jsonList = jsonDecode(response.body) as List<dynamic>;
       return jsonList.map((e) => e as Map<String, dynamic>).toList();

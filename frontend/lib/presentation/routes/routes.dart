@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/data/repository_implementations/auth_repository.dart';
+import 'package:frontend/domain/models/rental.dart';
 import 'package:frontend/presentation/views/host/host_bundle.dart';
 import 'package:frontend/presentation/views/tourist/tourist_bundle.dart';
 import 'package:frontend/presentation/views/host/reservations_screen.dart';
@@ -22,6 +23,9 @@ class Routes {
   static const String touristSearchScreen = 'tourist_search';
   static const String touristReservationsScreen = 'tourist_reservations';
   static const String touristProfileScreen = 'tourist_profile';
+  static const String touristRentalDetailScreen = 'tourist_rental_detail';
+  static const String touristReservationFormScreen = 'tourist_reservation_form';
+  static const String touristPaymentScreen = 'tourist_payment';
 
   static Map<String, Widget Function(BuildContext)> routes = {
     splashScreen: (context) => const SplashScreen(),
@@ -33,6 +37,32 @@ class Routes {
     touristSearchScreen: (context) => const TouristSearchScreen(),
     touristReservationsScreen: (context) => const TouristReservationsScreen(),
     touristProfileScreen: (context) => const TouristProfileScreen(),
+    touristRentalDetailScreen: (context) {
+      final rental =
+          ModalRoute.of(context)!.settings.arguments as Rental;
+      return TouristRentalDetailScreen(rental: rental);
+    },
+    touristReservationFormScreen: (context) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      return TouristCreateReservationScreen(
+        rentalId: args['rentalId'] as String,
+        rentalName: args['rentalName'] as String,
+        valueNight: args['valueNight'] as double,
+      );
+    },
+    touristPaymentScreen: (context) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      return TouristPaymentScreen(
+        rentalId: args['rentalId'] as String,
+        rentalName: args['rentalName'] as String,
+        startDate: args['startDate'] as String,
+        endDate: args['endDate'] as String,
+        totalPrice: args['totalPrice'] as double,
+        nights: args['nights'] as int,
+      );
+    },
     hostHomeScreen: (context) => const HostHomeScreen(),
     createRentalScreen: (context) => const RentalFormScreen(),
     reservationsScreen: (context) {
