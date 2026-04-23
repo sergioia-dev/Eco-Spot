@@ -18,6 +18,7 @@ import com.ecospot.business.dato.CreateReviewRequest;
 import com.ecospot.business.dato.ItemCategory;
 import com.ecospot.business.dato.ItemsResponse;
 import com.ecospot.business.dato.PaymentStatus;
+import com.ecospot.business.dato.ReservationResponse;
 import com.ecospot.business.dato.RentalResponse;
 import com.ecospot.business.dato.RentalResponse.ImageInfo;
 import com.ecospot.persistance.entity.Business;
@@ -300,7 +301,7 @@ public class TouristService {
     }
   }
 
-  public List<RentalResponse> getUserReservations(String token, boolean upcoming) {
+  public List<ReservationResponse> getUserReservations(String token, boolean upcoming) {
     if (!isValidTouristToken(token)) {
       logger.warn("Invalid token for getUserReservations");
       return null;
@@ -316,14 +317,45 @@ public class TouristService {
       reservations = reservationRepository.findByUserIdAndEndDateBefore(userId, today);
     }
 
-    List<Rental> rentals = reservations.stream()
-        .map(Reservation::getRental)
-        .distinct()
+    return reservations.stream()
+        .map(this::toReservationResponse)
+        .toList();
+  }
+
+  private ReservationResponse toReservationResponse(Reservation reservation) {
+    Rental rental = reservation.getRental();
+    List<ImageInfo> images = imageRepository.findByRentalId(rental.getId()).stream()
+        .map(img -> new ImageInfo(img.getId(), img.getExtension()))
         .toList();
 
-    return rentals.stream()
-        .map(this::toRentalResponse)
-        .toList();
+    double reviewAverage = calculateReviewAverage(rental.getId());
+
+    long nights = reservation.getEndDate().toEpochDay() - reservation.getStartingDate().toEpochDay();
+    double price = nights * rental.getValueNight();
+
+    ReservationResponse response = new ReservationResponse();
+    response.setId(rental.getId());
+    response.setName(rental.getName());
+    response.setDescription(rental.getDescription());
+    response.setContact(rental.getContact());
+    response.setSize(rental.getSize());
+    response.setPeopleQuantity(rental.getPeopleQuantity());
+    response.setRooms(rental.getRooms());
+    response.setBathrooms(rental.getBathrooms());
+    response.setCity(rental.getCity());
+    response.setCountry(rental.getCountry());
+    response.setLocation(rental.getLocation());
+    response.setValueNight(rental.getValueNight());
+    response.setEnable(rental.isEnable());
+    response.setReviewAverage(reviewAverage);
+    response.setImages(images);
+
+    response.setStartingDate(reservation.getStartingDate());
+    response.setEndDate(reservation.getEndDate());
+    response.setPrice(price);
+    response.setCancelled(reservation.isCancelled());
+
+    return response;
   }
 
   private RentalResponse toRentalResponse(Rental rental) {

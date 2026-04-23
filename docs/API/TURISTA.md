@@ -290,11 +290,17 @@ curl -X GET "http://localhost:8080/api/v1/tourist/reservations?upcoming=false" \
     "reviewAverage": 4.5,
     "images": [
       { "id": "...", "extension": ".jpg" }
-    ]
+    ],
+    "startingDate": "2026-05-01",
+    "endDate": "2026-05-05",
+    "price": 600.0,
+    "isCancelled": false
   }
 ]
 ```
 
 **Nota:** 
-- Cada elemento en la respuesta es un `RentalResponse` con los detalles completos del rental.
-- Se devuelven los rentals únicos de las reservaciones (sin duplicados si el usuario tiene múltiples reservaciones en el mismo rental).
+- Cada elemento en la respuesta contiene los detalles completos del rental más los datos de la reservación.
+- Se devuelven todas las reservaciones, incluyendo duplicados si el usuario tiene múltiples reservaciones para el mismo rental en diferentes fechas.
+- El campo `price` se calcula como: (endDate - startingDate) × valueNight.
+- `isCancelled` indica si la reservación ha sido cancelada.
