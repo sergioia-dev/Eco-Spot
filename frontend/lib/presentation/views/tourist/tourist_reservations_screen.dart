@@ -183,6 +183,7 @@ class _TouristReservationsScreenState extends State<TouristReservationsScreen> {
   }
 
   Widget _buildReservationCard(Map<String, dynamic> item) {
+    final reservationId = item['reservationId'] as String? ?? '';
     final id = item['id'] as String? ?? '';
     final name = item['name'] as String? ?? 'Unknown';
     final city = item['city'] as String? ?? '';
@@ -362,7 +363,7 @@ class _TouristReservationsScreenState extends State<TouristReservationsScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: () => _showCancelDialog(id),
+                        onPressed: () => _showCancelDialog(reservationId),
                         icon: const Icon(Icons.cancel, color: Colors.red),
                         label: const Text(
                           'Cancelar Reservación',
