@@ -6,6 +6,10 @@ import 'package:frontend/presentation/views/tourist/tourist_bundle.dart';
 import 'package:frontend/presentation/views/host/reservations_screen.dart';
 import 'package:frontend/presentation/views/auth/auth_bundle.dart';
 import 'package:frontend/presentation/views/splash_screen.dart';
+import 'package:frontend/presentation/business/business_dashboard.dart';
+import 'package:frontend/presentation/business/business_form.dart';
+import 'package:frontend/presentation/experiences/experience_dashboard.dart';
+import 'package:frontend/presentation/experiences/experience_form.dart';
 
 class Routes {
   static const String initialRoute = splashScreen;
@@ -27,6 +31,10 @@ class Routes {
   static const String touristReservationFormScreen = 'tourist_reservation_form';
   static const String touristPaymentScreen = 'tourist_payment';
   static const String touristReviewScreen = 'tourist_review';
+  static const String businessDashboardScreen = 'business_dashboard';
+  static const String businessFormScreen = 'business_form';
+  static const String experienceDashboardScreen = 'experience_dashboard';
+  static const String experienceFormScreen = 'experience_form';
 
   static Map<String, Widget Function(BuildContext)> routes = {
     splashScreen: (context) => const SplashScreen(),
@@ -83,7 +91,10 @@ class Routes {
       );
     },
     businessHomeScreen: (context) =>
-        const Scaffold(body: Center(child: Text('Business Home Screen'))),
+        BusinessPortfolio(),
+    businessFormScreen: (context) => AddBusinessScreen(),
+    experienceDashboardScreen: (context) => ExperiencesDashboard(),
+    experienceFormScreen: (context) => AddExperienceScreen(),
     adminHomeScreen: (context) =>
         const Scaffold(body: Center(child: Text('Admin Home Screen'))),
   };
