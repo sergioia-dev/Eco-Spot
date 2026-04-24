@@ -5,6 +5,10 @@ class BusinessModel {
   String? id, name, description, contact, city, country, location, menu;
   bool isEnable = true;
   List<String> images = [];
+
+  static Future<BusinessModel?> fromJson(decode) async {
+    return null;
+  }
 }
 
 class AddBusinessScreen extends StatefulWidget {
