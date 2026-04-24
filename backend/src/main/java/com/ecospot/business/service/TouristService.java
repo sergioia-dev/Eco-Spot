@@ -318,6 +318,7 @@ public class TouristService {
     }
 
     return reservations.stream()
+        .filter(r -> !r.isCancelled())
         .map(this::toReservationResponse)
         .toList();
   }

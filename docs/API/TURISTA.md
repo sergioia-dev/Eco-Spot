@@ -294,14 +294,13 @@ curl -X GET "http://localhost:8080/api/v1/tourist/reservations?upcoming=false" \
     ],
     "startingDate": "2026-05-01",
     "endDate": "2026-05-05",
-    "price": 600.0,
-    "isCancelled": false
+    "price": 600.0
   }
 ]
 ```
 
 **Nota:** 
+- Las reservaciones canceladas no se incluyen en la respuesta.
 - Cada elemento en la respuesta contiene los detalles completos del rental más los datos de la reservación.
 - Se devuelven todas las reservaciones, incluyendo duplicados si el usuario tiene múltiples reservaciones para el mismo rental en diferentes fechas.
 - El campo `price` se calcula como: (endDate - startingDate) × valueNight.
-- `isCancelled` indica si la reservación ha sido cancelada.
